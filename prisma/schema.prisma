@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  NORMAL
+  STAFF
+  ADMIN
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          Role     @default(NORMAL)
+  guild         String?
+  guildAcronym  String?
+  imagePath     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
