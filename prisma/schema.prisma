@@ -12,15 +12,60 @@ enum Role {
   ADMIN
 }
 
+enum MethodCaught {
+  SAFARI
+  EGG
+  SINGLE
+  HORDE3
+  HORDE5
+  FISHING
+  MYSTERIOUS
+  OTHERS
+}
+
+enum StillHas {
+  YES
+  SELL
+  FLED
+}
+
 model User {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String
-  email         String   @unique
+  email         String    @unique
   password_hash String
-  role          Role     @default(NORMAL)
+  role          Role      @default(NORMAL)
   guild         String?
   guildAcronym  String?
   imagePath     String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  showcase      Showcase?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Showcase {
+  id        Int             @id @default(autoincrement())
+  title     String
+  userId    Int             @unique
+  user      User            @relation(fields: [userId], references: [id])
+  shinies   ShinyCaptured[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model ShinyCaptured {
+  id           Int          @id @default(autoincrement())
+  pokemonName  String
+  pokemonId    Int
+  encounters   Int          @default(0)
+  isAlpha      Boolean      @default(false)
+  isSecret     Boolean      @default(false)
+  methodCaught MethodCaught @default(OTHERS)
+  captureDate  DateTime     @default(now())
+  stillHas     StillHas     @default(YES)
+  nature       String       @default("Not informed.")
+  showcaseId   Int
+  showcase     Showcase     @relation(fields: [showcaseId], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
