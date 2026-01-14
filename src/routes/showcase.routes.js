@@ -1,6 +1,5 @@
 import express from "express";
 import prisma from "../connection-db.js";
-import { Prisma } from "@prisma/client";
 
 const router = express.Router();
 
@@ -66,8 +65,6 @@ router.post("/create", async (req, res) => {
         return res.status(500).json({ error: "Error creating showcase" });
     }
 });
-
-
 //ARRUMAR PUT N TA FUNFANDO
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
