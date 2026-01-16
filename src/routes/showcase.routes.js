@@ -37,35 +37,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/create", async (req, res) => {
-    try {
-        const { title, userId } = req.body;
-
-        if (!title || !userId) {
-            throw new Error("Validation error");
-        }
-
-        const showcase = await prisma.showcase.create({
-            data: {
-                title,
-                userId,
-            },
-        });
-
-        return res.status(201).json(showcase)
-
-    } catch (error) {
-
-        if (error.message === "Validation error") {
-            return res
-                .status(400)
-                .json({ error: "Title and userId are required." });
-        }
-
-        return res.status(500).json({ error: "Error creating showcase" });
-    }
-});
-//ARRUMAR PUT N TA FUNFANDO
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { title } = req.body;
@@ -80,7 +51,7 @@ router.put("/:id", async (req, res) => {
         }
 
         const showcaseUpdate = await prisma.showcase.update({
-            whre: { id: Number(id) },
+            where: { id: Number(id) },
             data: {
                 ...(title && { title })
             }
@@ -92,25 +63,4 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const showcase = await prisma.showcase.findUnique({
-            where: { id: Number(id) },
-        });
-
-        if (!showcase) {
-            return res.status(404).json({ error: "Showcase not found" });
-        }
-
-        await prisma.showcase.delete({
-            where: { id: Number(id) },
-        });
-
-        return res.status(200).json({ message: "Showcase successfully deleted." });
-    } catch (error) {
-        return res.status(500).json({ error: "Error deleting showcase" });
-    }
-})
 export default router;

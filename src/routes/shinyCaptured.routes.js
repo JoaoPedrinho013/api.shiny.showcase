@@ -75,6 +75,43 @@ router.post("/create", async (req, res) => {
     }
 });
 
+router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const { pokemonName, pokemonId, encounters, isAlpha, isSecret, 
+            methodCaught, captureDate, stillHas, nature, showcaseId } = req.body;
+
+    try {
+        const shinyCaptured = await prisma.shinyCaptured.findUnique({
+            where: { id: Number(id) }
+        });
+
+        if (!shinyCaptured) {
+            return res.status(404).json({ error: "Shiny captured not found" });
+        }
+
+        const updatedShinyCaptured = await prisma.shinyCaptured.update({
+            where: { id: Number(id) },
+            data: {
+                ...(pokemonName && { pokemonName }),
+                ...(pokemonId && { pokemonId }),
+                ...(encounters !== undefined && { encounters }),
+                ...(isAlpha !== undefined && { isAlpha }),
+                ...(isSecret !== undefined && { isSecret }),
+                ...(methodCaught && { methodCaught }),
+                ...(captureDate && { captureDate }),
+                ...(stillHas !== undefined && { stillHas }),
+                ...(nature && { nature }),
+                ...(showcaseId && { showcaseId })
+            }
+        });
+
+        return res.status(200).json(updatedShinyCaptured);
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error updating shiny captured" });
+    }
+});
+
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
 

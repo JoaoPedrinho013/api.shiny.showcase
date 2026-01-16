@@ -78,6 +78,13 @@ router.post("/create", uploadUserImage.single("file"), async (req, res) => {
       },
     });
 
+    await prisma.showcase.create({
+      data: {
+        title: `${name}'s Showcase`,
+        userId: user.id,
+      },
+    });
+
     return res.status(201).json(`User created with email: ${user.email}`);
   } catch (error) {
     console.error("Error creating user:", error);
